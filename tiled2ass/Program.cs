@@ -27,6 +27,24 @@ namespace tiled2ass
 
 			var data = new Dictionary<string, List<short>>();
 			var tmx = Json5.Parse(File.ReadAllText(inFile)) as JsonObj;
+
+			var palettes = new byte[2048]; //or so~
+			foreach (var tileset in tmx.Path<List<JsonObj>>("/tilesets"))
+			{
+				foreach (var tile in tileset.Path<List<JsonObj>>("/tiles"))
+				{
+					var id = tile.Path<int>("/id");
+					if (tile.ContainsKey("properties"))
+					{
+						foreach (var property in tile.Path<JsonObj[]>("/properties"))
+						{
+							if (property.Path<string>("/name") == "palette")
+								palettes[id] = (byte)property.Path<int>("/value");
+						}
+					}
+				}
+			}
+
 			foreach (var layer in tmx.Path<List<JsonObj>>("/layers"))
 			{
 				if (layer.Path<string>("/type") != "tilelayer")
@@ -47,12 +65,14 @@ namespace tiled2ass
 				var newData = new List<short>();
 				foreach (var value in mapData)
 				{
-					var v = (value > 0) ? ((value - 1) & 0x1FF) : 0;
+					var v = (value > 0) ? (short)((value - 1) & 0x1FF) : 0;
+					var o = v;
 					v += tileOffset;
 					if ((value & 0x80000000) == 0x80000000) //hflip
 						v |= 0x0400;
 					if ((value & 0x40000000) == 0x40000000) //vflip
 						v |= 0x0800;
+					v |= (palettes[o] << 12);
 					newData.Add((short)v);
 				}
 				data.Add(mapName, newData);
