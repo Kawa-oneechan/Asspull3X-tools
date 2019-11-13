@@ -104,25 +104,25 @@ namespace img2ass
 			var ret = new List<byte>();
 			var i = 0;
 			var count = 0;
-			var lastCount = 0;
 			Action emit = new Action(() =>
 			{
 				if (i >= data.Length)
 					return;
-				ret.Add((byte)count);
+				if (data[i] == 204)
+					Console.WriteLine("!");
+				if (data[i] >= 0xC0 || count > 0)
+					ret.Add((byte)(0xC0 | (count + 1)));
 				ret.Add(data[i]);
-				lastCount = count;
 				count = 0;
 			});
 			for (i = 0; i < data.Length - 1; i++)
 			{
 				if (data[i] == data[i + 1])
 				{
-					if (count > 127)
+					if (count == 62)
 						emit();
 					else
 						count++;
-
 				}
 				else
 				{
@@ -130,6 +130,8 @@ namespace img2ass
 				}
 			}
 			emit();
+			ret.Add(0xC0);
+			ret.Add(0xC0);
 			return ret.ToArray();
 		}
 

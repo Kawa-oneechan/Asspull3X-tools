@@ -59,10 +59,21 @@ namespace assimgview
 			{
 				while (file.BaseStream.Position < file.BaseStream.Length)
 				{
-					var rle = file.ReadByte();
-					rle++;
 					var data = file.ReadByte();
-					for (; rle > 0; rle--)
+					if ((data & 0xC0) == 0xC0)
+					{
+						var rle = data & 0x3F;
+						var original = data;
+						var from = file.BaseStream.Position - 1;
+						data = file.ReadByte();
+						if (data == 0xC0 && rle == 0)
+							break;
+						for (; rle > 0; rle--)
+						{
+							screen[pos++] = data;
+						}
+					}
+					else
 						screen[pos++] = data;
 				}
 			}
@@ -71,7 +82,7 @@ namespace assimgview
 				//TODO: check this, I only have compressed images right now.
 				screen = file.ReadBytes((int)dataSize);
 			}
-			var bitmapData = bitmap.LockBits(new Rectangle(0, 0, 320, 200), ImageLockMode.ReadOnly, bitmap.PixelFormat);
+			var bitmapData = bitmap.LockBits(new Rectangle(0, 0, width, height), ImageLockMode.ReadOnly, bitmap.PixelFormat);
 			Marshal.Copy(screen, 0, bitmapData.Scan0, width * height);
 
 			var form = new Form()
