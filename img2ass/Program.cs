@@ -71,7 +71,13 @@ namespace img2ass
 			inBitmap.UnlockBits(bitmapData);
 
 			if (compress)
-				outData = outData.RleCompress();
+			{
+				var compressed = outData.RleCompress();
+				if (compressed.Length < outData.Length)
+					outData = compressed;
+				else
+					compress = false;
+			}
 
 			using (var f = new BinaryWriter(File.Open(outFile, FileMode.Create)))
 			{
