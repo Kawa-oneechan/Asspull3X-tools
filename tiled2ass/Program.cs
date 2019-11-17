@@ -31,6 +31,8 @@ namespace tiled2ass
 			var palettes = new byte[2048]; //or so~
 			foreach (var tileset in tmx.Path<List<JsonObj>>("/tilesets"))
 			{
+				if (!tileset.ContainsKey("tiles"))
+					continue;
 				foreach (var tile in tileset.Path<List<JsonObj>>("/tiles"))
 				{
 					var id = tile.Path<int>("/id");
