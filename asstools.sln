@@ -8,6 +8,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "img2ass", "img2ass\img2ass.
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "tiled2ass", "tiled2ass\tiled2ass.csproj", "{5F938319-A404-42FD-BF49-EE906FB7FA5D}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "assfix", "assfix\assfix.csproj", "{31AB84A3-14E2-4C2C-8F8E-E9AFEE930573}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|x86 = Debug|x86
@@ -30,6 +32,10 @@ Global
 		{5F938319-A404-42FD-BF49-EE906FB7FA5D}.Debug|x86.Build.0 = Debug|x86
 		{5F938319-A404-42FD-BF49-EE906FB7FA5D}.Release|x86.ActiveCfg = Release|x86
 		{5F938319-A404-42FD-BF49-EE906FB7FA5D}.Release|x86.Build.0 = Release|x86
+		{31AB84A3-14E2-4C2C-8F8E-E9AFEE930573}.Debug|x86.ActiveCfg = Debug|x86
+		{31AB84A3-14E2-4C2C-8F8E-E9AFEE930573}.Debug|x86.Build.0 = Debug|x86
+		{31AB84A3-14E2-4C2C-8F8E-E9AFEE930573}.Release|x86.ActiveCfg = Release|x86
+		{31AB84A3-14E2-4C2C-8F8E-E9AFEE930573}.Release|x86.Build.0 = Release|x86
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
