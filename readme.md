@@ -2,6 +2,9 @@
 ## Tools
 This repository contains the full source (for what it's worth) of Kawa's *Asspull IIIx* toolkit. You can build it in anything Visual Studio 2010 Express or better. Some example data is included.
 
+### assfix
+This takes an AP3 ROM file, sets the checksum field in the header, and pads it out to the nearest power of two.
+
 ### assimgview
 The A3X BIOS has its own image format. This little tool can show these `.api` files for checking. It takes one parameter, the actual file to show.
 
