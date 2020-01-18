@@ -40,7 +40,7 @@ namespace assimgview
 			var palOffset = file.ReadMotoUInt32();
 			var dataOffset = file.ReadMotoUInt32();
 
-			var bitmap = new Bitmap(width, height, System.Drawing.Imaging.PixelFormat.Format8bppIndexed);
+			var bitmap = new Bitmap(width, height, (depth == 8) ? PixelFormat.Format8bppIndexed : PixelFormat.Format4bppIndexed);
 			var palette = bitmap.Palette;
 			file.BaseStream.Seek(palOffset, SeekOrigin.Begin);
 			for (var i = 0; i < palSize; i++)
@@ -83,7 +83,7 @@ namespace assimgview
 				screen = file.ReadBytes((int)dataSize);
 			}
 			var bitmapData = bitmap.LockBits(new Rectangle(0, 0, width, height), ImageLockMode.ReadOnly, bitmap.PixelFormat);
-			Marshal.Copy(screen, 0, bitmapData.Scan0, width * height);
+			Marshal.Copy(screen, 0, bitmapData.Scan0, (width * height) / ((depth == 8) ? 1 : 2));
 
 			var form = new Form()
 			{
