@@ -67,7 +67,7 @@ namespace tiled2ass
 				var newData = new List<short>();
 				foreach (var value in mapData)
 				{
-					var v = (value > 0) ? (short)((value - 1) & 0x1FF) : 0;
+					var v = (value > 0) ? (short)((value - 1) & 0x3FF) : 0;
 					var o = v;
 					v += tileOffset;
 					if ((value & 0x80000000) == 0x80000000) //hflip
