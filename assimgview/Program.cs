@@ -82,6 +82,17 @@ namespace assimgview
 				//TODO: check this, I only have compressed images right now.
 				screen = file.ReadBytes((int)dataSize);
 			}
+
+			if (depth == 4)
+			{
+				for (var i = 0; i < width * height; i++)
+				{
+					var a = (screen[i] >> 0) & 0x0F;
+					var b = (screen[i] >> 4) & 0x0F;
+					screen[i] = (byte)(b | (a << 4));
+				}
+			}
+
 			var bitmapData = bitmap.LockBits(new Rectangle(0, 0, width, height), ImageLockMode.ReadOnly, bitmap.PixelFormat);
 			Marshal.Copy(screen, 0, bitmapData.Scan0, (width * height) / ((depth == 8) ? 1 : 2));
 

@@ -70,6 +70,16 @@ namespace img2ass
 			Marshal.Copy(bitmapData.Scan0, outData, 0, size);
 			inBitmap.UnlockBits(bitmapData);
 
+			if (inBitmap.PixelFormat == PixelFormat.Format4bppIndexed)
+			{
+				for (var i = 0; i < size; i++)
+				{
+					var a = (outData[i] >> 0) & 0x0F;
+					var b = (outData[i] >> 4) & 0x0F;
+					outData[i] = (byte)(b | (a << 4));
+				}
+			}
+
 			if (compress)
 			{
 				var compressed = outData.RleCompress();
