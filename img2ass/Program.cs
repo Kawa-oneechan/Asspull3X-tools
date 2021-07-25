@@ -118,8 +118,8 @@ namespace img2ass
 			{
 				if (i >= data.Length)
 					return;
-				if (data[i] == 204)
-					Console.WriteLine("!");
+				//if (data[i] == 204)
+				//	Console.WriteLine("!");
 				if (data[i] >= 0xC0 || count > 0)
 					ret.Add((byte)(0xC0 | (count + 1)));
 				ret.Add(data[i]);
