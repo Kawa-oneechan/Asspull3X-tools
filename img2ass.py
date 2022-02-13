@@ -135,7 +135,7 @@ if Path(args.outFile).suffix == '.c' or Path(args.outFile).suffix == '.s':
 	if asS:
 		of.write(f'{stem}:')
 	else:
-		of.write(f'const uint8_t {stem}[{len(data)}] = {{')
+		of.write(f'const unsigned char {stem}[{len(data)}] = {{')
 	i = 0
 	for v in data:
 		if i % 16 == 0:
