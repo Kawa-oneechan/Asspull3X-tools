@@ -32,7 +32,7 @@ if asS:
 	of.write(f'\t.global {args.identifier}\n')
 	of.write(f'{args.identifier}:')
 else:
-	of.write(f'const unsigned short {args.identifier}[{imgh}] = {{')
+	of.write(f'const uint16_t {args.identifier}[{imgh}] = {{')
 
 for y in range(imgh):
 	r, g, b = im.getpixel((0, y))

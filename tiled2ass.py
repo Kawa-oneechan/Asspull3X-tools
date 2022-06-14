@@ -80,7 +80,7 @@ for key,item in data.items():
 	if asS:
 		of.write(f'{key}:')
 	else:
-		of.write(f'const unsigned short {key}[{len(item)}] = {{')
+		of.write(f'const uint16_t {key}[{len(item)}] = {{')
 	i = 0
 	for v in item:
 		if i % 8 == 0:
