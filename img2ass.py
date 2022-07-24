@@ -10,6 +10,7 @@ parser.add_argument('outFile', nargs='?', help='target .api file')
 parser.add_argument('-r', '--raw', help='skip compression', action='store_true')
 parser.add_argument('-v', '--verbose', help='use verbose output', action='store_true')
 parser.add_argument('-g', '--nograds', help='skip HDMA gradients', action='store_true')
+parser.add_argument('-c', '--clipgrads', help='clip HDMA gradients', action='store_true')
 args = parser.parse_args()
 
 stem = Path(args.inFile).stem
@@ -171,13 +172,18 @@ if len(hdmaChannels) > 0:
 			gradient.append(snes)
 		start = 0
 		stop = imgh
-		# first = gradient[start]
-		# last = gradient[stop - 1]
-		# for y in range(start, stop):
-		#	if gradient[y] != first:
-		#		start = y
-		#		break
-		# gradient = gradient[start:stop]
+		if args.clipgrads:
+			first = gradient[start]
+			last = gradient[stop - 1]
+			for y in range(start, stop):
+				if gradient[y] != first:
+					start = y
+					break
+			for y in range(stop - 1, start + 2, -1):
+				if gradient[y] != last:
+					stop = y
+					break
+			gradient = gradient[start:stop]
 		bf.write(struct.pack('>H', len(gradient)))
 		if imgh <= 240:
 			start = start * 2
