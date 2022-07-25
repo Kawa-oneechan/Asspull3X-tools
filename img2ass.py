@@ -161,9 +161,16 @@ bf.write(outData)
 if len(hdmaChannels) > 0:
 	bf.write(struct.pack('>b', len(hdmaChannels)))
 	for i in hdmaChannels:
+		clipgrads = args.clipgrads
 		im = Image.open(stem + f'-h{i}.png')
 		if im.mode != 'RGB':
 			im = im.convert('RGB')
+		tl = im.getpixel((0,0))
+		tr = im.getpixel((im.size[0]-1,0))
+		if tr == (255, 255, 255) and tl != (255, 255, 255):
+			clipgrads = False
+			if args.verbose:
+				print(f'Disabling clipping for channel {i}.')
 		imgh = im.size[1]
 		gradient = []
 		for y in range(imgh):
@@ -172,7 +179,7 @@ if len(hdmaChannels) > 0:
 			gradient.append(snes)
 		start = 0
 		stop = imgh
-		if args.clipgrads:
+		if clipgrads:
 			first = gradient[start]
 			last = gradient[stop - 1]
 			for y in range(start, stop):
@@ -184,18 +191,19 @@ if len(hdmaChannels) > 0:
 					stop = y
 					break
 			gradient = gradient[start:stop]
-		bf.write(struct.pack('>H', len(gradient)))
 		if imgh <= 240:
 			start = start * 2
 			stop = stop * 2
-		hdmaControl = 1 | (1 << 4) | (start << 8) | (stop << 20)
+		length = stop - start
+		hdmaControl = 1 | (1 << 4) | (start << 8) | (length << 20)
 		if imgh == 240:
 			hdmaControl = hdmaControl | 0x80
+		bf.write(struct.pack('>H', len(gradient) * 2))
 		bf.write(struct.pack('>L', hdmaControl))
 		for y in gradient:
 			bf.write(struct.pack('>H', y))
 		if args.verbose:
-			print(f'hdma[{i}]: 0x{hdmaControl:X}, size 0x{len(gradient):X}')
+			print(f'hdma[{i}]: 0x{hdmaControl:X}, size 0x{len(gradient):X}, {start} to {stop}, for {length}')
 
 if Path(args.outFile).suffix == '.c' or Path(args.outFile).suffix == '.s':
 	asS = not Path(args.outFile).suffix == '.c'
