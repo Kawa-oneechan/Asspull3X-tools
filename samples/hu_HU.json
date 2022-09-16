@@ -10,6 +10,7 @@
 	"longTime": "%H:%M:%S",
 	"thousands": " ",
 	"decimal": ",",
+	"thousandsCt": 3,
 	"currency": "Ft",
 	"currencyAfter": false,
 	"scancodes": [

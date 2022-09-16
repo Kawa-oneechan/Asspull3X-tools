@@ -34,6 +34,16 @@ if ext == '.json':
 			raise Exception(f"'{key}': '{v}' is too long, must be at most {max} characters.")
 		bf.write(struct.pack(f'={max}s', bytes(v, 'cp1252')))
 
+	def processByte(key):
+		if not key in localeJSON:
+			raise Exception(f"missing key '{key}'.")
+		v = localeJSON[key];
+		if not isinstance(v, int):
+			raise Exception(f"'{key}': '{v}' is not an integer value.")
+		if v > 255:
+			raise Exception(f"'{key}': '{v}' is too high, must be at most 255.")			
+		bf.write(struct.pack(f'=1b', v))
+
 	def processBool(key):
 		if not key in localeJSON:
 			raise Exception(f"missing key '{key}'.")
@@ -91,8 +101,10 @@ if ext == '.json':
 	processString('longTime', 16)
 	processString('thousands', 1)
 	processString('decimal', 1)
+	processByte('thousandsCt')
 	processString('currency', 4)
 	processBool('currencyAfter')
+	bf.write(b'\xFF' * 16)
 	processScans('scancodes', 256)
 
 	with open(args.outFile, "wb") as of:
@@ -110,6 +122,11 @@ elif ext == '.loc':
 	def processString(key, max):
 		s, = struct.unpack(f'={max}s', inp.read(max))
 		js[key] = s.decode('cp1252').replace('\x00', '')
+
+	def processByte(key):
+		s, = struct.unpack(f'=1b', inp.read(1))
+		print(s)
+		js[key] = s[0]
 	
 	def processArray(key, amount, max):
 		s, = struct.unpack(f'={max}s', inp.read(max))
@@ -142,8 +159,10 @@ elif ext == '.loc':
 	processString('longTime', 16)
 	processString('thousands', 1)
 	processString('decimal', 1)
+	processByte('thousandsCt')
 	processString('currency', 4)
 	processBool('currencyAfter')
+	inp.read(16)
 	processScans('scancodes', 256)
 	
 	with open(args.outFile, "w") as of:
