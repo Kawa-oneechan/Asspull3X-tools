@@ -60,6 +60,8 @@ optional arguments:
 
 This takes a PNG image (or GIF, or BMP, if want to for whatever reason) of either four or eight bits per pixel and tries to convert it to the A3X BIOS' custom format. Basically  It takes up to three parameters: the input image file, the output `.api` file, and whether or not to skip compression, the `--raw`/`-r` parameter. Again, given only a `foo.png`, it'll assume `foo.api` unless told otherwise.
 
+If a `foo-hN.png` exists, that file will be converted to an HDMA gradient, like with `hdma2ass`, and embedded in the resulting file. _N_ can be any number from 0 to 7, and the gradient will apply to that color index. Use the `--nograds`/`-g` parameter to skip this part.
+
 ```
 usage: img2ass.py [-h] [-r] [-v] inFile [outFile]
 
@@ -70,9 +72,28 @@ positional arguments:
   outFile        target .api file
 
 optional arguments:
-  -h, --help     show this help message and exit
-  -r, --raw      skip compression
-  -v, --verbose  use verbose output
+  -h, --help       show this help message and exit
+  -r, --raw        skip compression
+  -v, --verbose    use verbose output
+  -g, --nograds    skip HDMA gradients
+  -c, --clipgrads  clip HDMA gradients
+```
+
+### mkloc
+
+This takes a JSON file describing a locale and keyboard layout, and converts it to a `.loc` file that you can use on the A3X by storing it on a disk and listing it in a `start.cfg` file on that disk, with a line like `locale=foo.loc`, or by selecting it in the Navigator.
+
+```
+usage: mkloc.py [-h] inFile [outFile]
+
+Convert an A3X locale from JSON to binary or vice versa.
+
+positional arguments:
+  inFile      source file
+  outFile     target .loc or .json file
+
+optional arguments:
+  -h, --help  show this help message and exit
 ```
 
 ### tiled2ass
