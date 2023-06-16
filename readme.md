@@ -60,6 +60,8 @@ optional arguments:
 
 This takes a PNG image (or GIF, or BMP, if want to for whatever reason) of either four or eight bits per pixel and tries to convert it to the A3X BIOS' custom format. Basically  It takes up to three parameters: the input image file, the output `.api` file, and whether or not to skip compression, the `--raw`/`-r` parameter. Again, given only a `foo.png`, it'll assume `foo.api` unless told otherwise.
 
+Normally, either 16 or 256 colors are written. If the source image has significantly fewer than 256 but more than 16 colors, you may use the `--truepal`/`-t` parameter to store only the true amount of colors and significantly reduce the file size. Be aware that the A3X BIOS can't tell and will still try to load all 16 or 256 colors, so garbage data will appear in the system palette to fill up the difference.
+
 If a `foo-hN.png` exists, that file will be converted to an HDMA gradient, like with `hdma2ass`, and embedded in the resulting file. _N_ can be any number from 0 to 7, and the gradient will apply to that color index. Use the `--nograds`/`-g` parameter to skip this part.
 
 ```
@@ -77,6 +79,7 @@ optional arguments:
   -v, --verbose    use verbose output
   -g, --nograds    skip HDMA gradients
   -c, --clipgrads  clip HDMA gradients
+  -t, --truepal    store minimal palette data
 ```
 
 ### mkloc
